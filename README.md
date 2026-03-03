@@ -1,73 +1,153 @@
-# Welcome to your Lovable project
+# Portfolio Euloge Tabala
 
-## Project info
+Portfolio professionnel de Euloge Tabala - Développeur Full Stack & Designer
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🌐 Site Web
 
-## How can I edit this code?
+**URL** : https://eulogetabala.cg
 
-There are several ways of editing your application.
+## 🚀 Technologies
 
-**Use Lovable**
+- **React** - Bibliothèque JavaScript
+- **TypeScript** - Typage statique
+- **Vite** - Build tool moderne
+- **Tailwind CSS** - Framework CSS
+- **GSAP** - Animations avancées
+- **React Router** - Navigation
+- **Firebase** - Backend (Firestore, Authentication)
+- **Cloudinary** - Gestion d'images
+- **EmailJS** - Envoi d'emails
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+## 📦 Installation
 
-Changes made via Lovable will be committed automatically to this repo.
+```bash
+# Cloner le repository
+git clone https://github.com/VOTRE_USERNAME/eulogetabala.git
 
-**Use your preferred IDE**
+# Aller dans le dossier
+cd eulogetabala
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+# Installer les dépendances
+npm install
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Démarrer le serveur de développement
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## 🔧 Configuration
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Variables d'environnement
 
-**Use GitHub Codespaces**
+Créez un fichier `.env` à la racine du projet :
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+```env
+# EmailJS
+VITE_EMAILJS_SERVICE_ID=votre_service_id
+VITE_EMAILJS_TEMPLATE_ID=votre_template_id
+VITE_EMAILJS_PUBLIC_KEY=votre_public_key
 
-## What technologies are used for this project?
+# Firebase
+VITE_FIREBASE_API_KEY=votre_api_key
+VITE_FIREBASE_AUTH_DOMAIN=votre_auth_domain
+VITE_FIREBASE_PROJECT_ID=votre_project_id
+VITE_FIREBASE_STORAGE_BUCKET=votre_storage_bucket
+VITE_FIREBASE_MESSAGING_SENDER_ID=votre_sender_id
+VITE_FIREBASE_APP_ID=votre_app_id
+VITE_FIREBASE_MEASUREMENT_ID=votre_measurement_id
 
-This project is built with:
+# Cloudinary
+VITE_CLOUDINARY_CLOUD_NAME=votre_cloud_name
+VITE_CLOUDINARY_UPLOAD_PRESET=votre_upload_preset
+```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Consultez les guides de configuration pour plus de détails :
+- `FIREBASE_SETUP.md` - Configuration Firebase
+- `CONFIGURATION_CLOUDINARY.md` - Configuration Cloudinary
+- `EMAILJS_SETUP.md` - Configuration EmailJS
 
-## How can I deploy this project?
+## 📝 Scripts disponibles
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+```bash
+# Développement
+npm run dev
 
-## Can I connect a custom domain to my Lovable project?
+# Build de production
+npm run build
 
-Yes, you can!
+# Prévisualiser le build
+npm run preview
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+# Linter
+npm run lint
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+# Tests
+npm run test
+```
+
+## 📁 Structure du projet
+
+```
+src/
+├── components/     # Composants React réutilisables
+├── pages/         # Pages de l'application
+├── services/      # Services (Firebase, Cloudinary, etc.)
+├── contexts/      # Contextes React (Auth, etc.)
+├── types/         # Types TypeScript
+├── utils/         # Utilitaires
+└── config/        # Configurations (Firebase, etc.)
+```
+
+## 🎨 Fonctionnalités
+
+- ✅ Portfolio moderne avec animations GSAP
+- ✅ Blog intégré avec Firebase Firestore
+- ✅ Dashboard admin pour gérer les articles
+- ✅ Upload d'images avec Cloudinary
+- ✅ Formulaire de contact avec EmailJS
+- ✅ Design responsive et moderne
+- ✅ Authentification Firebase
+
+## 📄 Pages
+
+- `/` - Page d'accueil
+- `/about` - À propos
+- `/services` - Services
+- `/realisations` - Réalisations
+- `/blog` - Blog
+- `/blog/:slug` - Article de blog
+- `/contact` - Contact
+- `/blog-dashboard` - Dashboard admin (protégé)
+
+## 🔐 Accès Admin
+
+- **URL** : `/blog-dashboard`
+- **Identifiants** : Voir `CREATION_COMPTE_ADMIN.md`
+
+## 🚀 Déploiement
+
+Consultez `GUIDE_DEPLOIEMENT.md` pour les instructions complètes de déploiement.
+
+### Déploiement rapide avec Vercel
+
+1. Poussez votre code sur GitHub
+2. Importez le projet sur Vercel
+3. Configurez les variables d'environnement
+4. Connectez votre domaine `eulogetabala.cg`
+
+## 📚 Documentation
+
+- `GUIDE_DEPLOIEMENT.md` - Guide de déploiement
+- `FIREBASE_SETUP.md` - Configuration Firebase
+- `CONFIGURATION_CLOUDINARY.md` - Configuration Cloudinary
+- `EMAILJS_SETUP.md` - Configuration EmailJS
+- `CREATION_COMPTE_ADMIN.md` - Création du compte admin
+
+## 📧 Contact
+
+- **Email** : contact@eulogetabala.cg
+- **WhatsApp** : +242 06 52 98 498
+- **Site** : https://eulogetabala.cg
+
+## 📄 Licence
+
+Tous droits réservés © 2024 Euloge Tabala
