@@ -32,6 +32,9 @@ const convertTimestamp = (timestamp: any): Date => {
 // Récupérer tous les articles (publiés uniquement pour le public)
 export const getPublishedPosts = async (): Promise<BlogPost[]> => {
   try {
+    console.log('📚 Tentative de récupération des articles depuis Firestore...');
+    console.log('📦 Collection:', BLOG_COLLECTION);
+    
     // Essayer d'abord avec la requête optimale (nécessite un index composite)
     try {
       const q = query(
@@ -39,8 +42,11 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
         where('published', '==', true),
         orderBy('publishedAt', 'desc')
       );
+      console.log('🔍 Exécution de la requête avec index...');
       const querySnapshot = await getDocs(q);
-      return querySnapshot.docs.map((doc) => {
+      console.log('✅ Requête réussie, documents trouvés:', querySnapshot.docs.length);
+      
+      const posts = querySnapshot.docs.map((doc) => {
         const data = doc.data();
         return {
           id: doc.id,
@@ -49,12 +55,23 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
           updatedAt: data.updatedAt ? convertTimestamp(data.updatedAt) : undefined,
         } as BlogPost;
       });
+      
+      console.log('📝 Articles transformés:', posts.length);
+      return posts;
     } catch (indexError: any) {
-      // Si l'index n'existe pas, récupérer tous les articles et filtrer/trier côté client
+      // Si l'index n'existe pas, essayer sans orderBy (juste avec le filtre published)
       if (indexError.code === 'failed-precondition' || indexError.message?.includes('index')) {
-        console.warn('Index Firestore manquant, utilisation du fallback:', indexError);
-        const q = query(collection(db, BLOG_COLLECTION));
+        console.warn('⚠️ Index Firestore manquant, utilisation du fallback sans orderBy:', indexError);
+        console.log('🔄 Récupération des articles publiés sans tri...');
+        
+        // Utiliser uniquement le filtre published (sans orderBy) pour éviter les problèmes de permissions
+        const q = query(
+          collection(db, BLOG_COLLECTION),
+          where('published', '==', true)
+        );
         const querySnapshot = await getDocs(q);
+        console.log('📄 Documents publiés récupérés:', querySnapshot.docs.length);
+        
         const posts = querySnapshot.docs
           .map((doc) => {
             const data = doc.data();
@@ -65,18 +82,31 @@ export const getPublishedPosts = async (): Promise<BlogPost[]> => {
               updatedAt: data.updatedAt ? convertTimestamp(data.updatedAt) : undefined,
             } as BlogPost;
           })
-          .filter((post) => post.published === true)
           .sort((a, b) => {
+            // Trier côté client par date
             const dateA = a.publishedAt instanceof Date ? a.publishedAt.getTime() : 0;
             const dateB = b.publishedAt instanceof Date ? b.publishedAt.getTime() : 0;
             return dateB - dateA;
           });
+        
+        console.log('✅ Articles publiés après tri:', posts.length);
         return posts;
       }
+      console.error('❌ Erreur non liée à l\'index:', indexError);
       throw indexError;
     }
-  } catch (error) {
-    console.error('Erreur lors de la récupération des articles:', error);
+  } catch (error: any) {
+    console.error('❌ Erreur lors de la récupération des articles:', error);
+    
+    // Enrichir l'erreur pour le frontend
+    if (error.code === 'permission-denied') {
+      error.message = "Permissions Firestore insuffisantes. Vérifiez vos règles de sécurité.";
+    } else if (error.code === 'failed-precondition') {
+      error.message = "Un index Firestore est manquant pour cette requête.";
+    } else if (error.code === 'unavailable') {
+      error.message = "Service Firebase temporairement indisponible ou problème de connexion.";
+    }
+    
     throw error;
   }
 };

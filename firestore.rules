@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Règles pour la collection blogPosts
+    match /blogPosts/{postId} {
+      // Permettre la lecture si :
+      // 1. L'utilisateur est authentifié (accès complet pour le dashboard)
+      // 2. OU le document est publié (accès public)
+      allow read: if request.auth != null || resource.data.published == true;
+      
+      // Permettre l'écriture uniquement pour les utilisateurs authentifiés
+      allow create, update, delete: if request.auth != null;
+    }
+    
+    // Par défaut, refuser l'accès à toutes les autres collections
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

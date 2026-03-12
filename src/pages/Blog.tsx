@@ -18,25 +18,33 @@ const Blog = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true);
+        setError(null);
+        console.log("🔄 Début du chargement des articles...");
+        
         const data = await getPublishedPosts();
+        console.log("✅ Articles récupérés:", data.length);
         setPosts(data);
-      } catch (error: any) {
-        console.error("Erreur lors du chargement des articles:", error);
-        // Afficher plus de détails sur l'erreur
-        if (error.code) {
-          console.error("Code d'erreur Firestore:", error.code);
+      } catch (err: any) {
+        console.error("❌ Erreur lors du chargement des articles:", err);
+        let errorMessage = "Impossible de charger les articles.";
+        
+        if (err.code === 'permission-denied') {
+          errorMessage = "Accès refusé. Vérifiez les règles de sécurité Firestore.";
+        } else if (err.code === 'failed-precondition') {
+          errorMessage = "Index Firestore manquant. Création de l'index requise.";
+        } else if (err.message?.includes('domain')) {
+          errorMessage = "Domaine non autorisé dans la console Firebase.";
+        } else if (err.message) {
+          errorMessage = `Erreur: ${err.message}`;
         }
-        if (error.message) {
-          console.error("Message d'erreur:", error.message);
-        }
-        // Si c'est une erreur d'index, afficher un message plus utile
-        if (error.code === 'failed-precondition' || error.message?.includes('index')) {
-          console.warn("Index Firestore manquant. Le système utilisera un fallback.");
-        }
+        
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
@@ -96,7 +104,17 @@ const Blog = () => {
         <div className="max-w-7xl mx-auto">
           {loading ? (
             <div className="text-center py-20">
-              <p className="text-white/50 text-lg">Chargement des articles...</p>
+              <p className="text-white/50 text-lg animate-pulse">Chargement des articles...</p>
+            </div>
+          ) : error ? (
+            <div className="text-center py-20 bg-red-500/5 rounded-2xl border border-red-500/20 p-8">
+              <p className="text-red-400 text-lg mb-4">{error}</p>
+              <button 
+                onClick={() => window.location.reload()}
+                className="px-6 py-2 bg-white/5 hover:bg-white/10 rounded-full text-sm font-medium transition-colors"
+              >
+                Réessayer
+              </button>
             </div>
           ) : posts.length === 0 ? (
             <div className="text-center py-20">
